@@ -6,76 +6,110 @@
     <title>Mis Remedios</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        :root { --bg-body: #f0f4f8; --bg-card: white; --text-main: #1e293b; --border: #cbd5e1; --btn-primary: #4f46e5; --btn-success: #10b981; --btn-warning: #f59e0b; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg-body); color: var(--text-main); padding: 15px; margin: 0; font-size: 18px; }
+        :root { 
+            --bg-body: #f0f4f8; --bg-card: white; --text-main: #1e293b; --border: #cbd5e1; 
+            --btn-primary: #4f46e5; --btn-success: #10b981; --btn-warning: #f59e0b; 
+        }
+        .dark-mode { 
+            --bg-body: #121212; --bg-card: #1e1e1e; --text-main: #f8fafc; --border: #334155; 
+        }
+
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg-body); color: var(--text-main); padding: 15px; margin: 0; font-size: 18px; transition: 0.3s; }
+        
         .card { background: var(--bg-card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 500px; margin: auto; border: 2px solid var(--border); }
-        .reloj-digital { font-size: 2.8rem; font-weight: 900; margin-bottom: 20px; background: #e2e8f0; padding: 20px; border-radius: 15px; text-align: center; }
         
-        /* Estilos del Manual */
-        .manual-box { background: #fffbeb; border: 2px solid #fef3c7; padding: 15px; border-radius: 12px; margin-bottom: 20px; display: none; font-size: 14px; line-height: 1.4; color: #92400e; }
-        .manual-box h4 { margin-top: 0; color: #b45309; }
+        .tema-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tema-btn { flex: 1; padding: 10px; font-size: 14px; cursor: pointer; border-radius: 10px; border: 2px solid var(--border); text-align: center; font-weight: bold; }
+
+        .reloj-digital { font-size: 2.8rem; font-weight: 900; margin-bottom: 20px; background: #e2e8f0; padding: 20px; border-radius: 15px; text-align: center; color: #1e293b; }
+        .dark-mode .reloj-digital { background: #2d2d2d; color: #f8fafc; }
         
+        .manual-box { background: #fffbeb; border: 2px solid #fef3c7; padding: 15px; border-radius: 12px; margin-bottom: 20px; display: none; font-size: 14px; color: #92400e; }
+        .dark-mode .manual-box { background: #2d2412; border-color: #45371c; color: #fde68a; }
+
         .aviso-emergencia { background: #fee2e2; border: 2px solid #fecaca; color: #991b1b; padding: 10px; border-radius: 10px; font-size: 13px; text-align: center; margin-bottom: 15px; font-weight: bold; }
 
-        input, select, button { width: 100%; padding: 16px; margin: 8px 0; border-radius: 12px; border: 2px solid var(--border); font-size: 18px; box-sizing: border-box; background: var(--bg-card); color: var(--text-main); font-weight: bold; }
+        /* Estilo para que el input de hora se vea grande y fácil de tocar */
+        input[type="time"], input[type="text"], select, button { 
+            width: 100%; padding: 18px; margin: 8px 0; border-radius: 12px; border: 2px solid var(--border); 
+            font-size: 18px; box-sizing: border-box; background: var(--bg-card); color: var(--text-main); font-weight: bold; 
+        }
+        
+        input[type="time"] { cursor: pointer; display: block; -webkit-appearance: none; }
+
         button { background: var(--btn-primary); color: white; border: none; cursor: pointer; }
         .btn-audio-alerta { animation: parpadeo 1.5s infinite; background: #ef4444; }
         @keyframes parpadeo { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         
-        .alarma-item { background: white; padding: 15px; border-radius: 15px; border: 2px solid var(--border); margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .alarma-item { background: var(--bg-card); padding: 15px; border-radius: 15px; border: 2px solid var(--border); margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
         .alarma-activa { position: fixed; top:0; left:0; width:100%; height:100%; z-index:9999; display:none; flex-direction:column; justify-content:center; align-items:center; background: #000; color: white; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="card">
+    <div class="tema-selector">
+        <div class="tema-btn" style="background: white; color: black;" onclick="setTema('light')">☀️ CLARO</div>
+        <div class="tema-btn" style="background: #121212; color: white;" onclick="setTema('dark')">🌙 OSCURO</div>
+    </div>
+
     <div class="reloj-digital" id="reloj-vivo">00:00:00</div>
 
-    <div class="aviso-emergencia">
-        ⚠️ IMPORTANTE: Mantenga el volumen de "Multimedia" alto.
-    </div>
+    <div class="aviso-emergencia">⚠️ VOLUMEN MULTIMEDIA ALTO</div>
     
-    <button id="btn-audio" class="btn-audio-alerta" onclick="inicializarApp()">🔔 ACTIVAR SISTEMA Y PERMISOS</button>
-    
-    <button onclick="toggleManual()" style="background: var(--btn-warning); font-size: 14px; padding: 10px;">📖 VER MANUAL DE CONFIGURACIÓN</button>
+    <button id="btn-audio" class="btn-audio-alerta" onclick="inicializarApp()">🔔 ACTIVAR SISTEMA</button>
+    <button onclick="toggleManual()" style="background: var(--btn-warning); font-size: 14px; padding: 10px; margin-top: 5px;">📖 MANUAL DE CONFIGURACIÓN</button>
 
     <div id="manual" class="manual-box">
-        <h4>⚙️ Para que suene siempre:</h4>
+        <h4>⚙️ Pasos obligatorios:</h4>
         <ol>
-            <li><strong>Batería:</strong> Ve a Ajustes > Aplicaciones > Mis Remedios > Batería > Selecciona <b>"Sin Restricciones"</b>.</li>
-            <li><strong>Notificaciones:</strong> Permite todas las notificaciones y márcalas como "Prioritarias".</li>
-            <li><strong>Encima de otras:</strong> Activa el permiso "Mostrar sobre otras aplicaciones".</li>
-            <li><strong>Volumen:</strong> Asegúrate de que el volumen de videos/música esté arriba.</li>
+            <li><b>Batería:</b> Ajustes > Apps > Mis Remedios > Batería > <b>Sin Restricciones</b>.</li>
+            <li><b>Aparecer encima:</b> Activa "Mostrar sobre otras aplicaciones".</li>
+            <li><b>Notificaciones:</b> Permitir todo.</li>
         </ol>
     </div>
 
-    <hr>
+    <hr style="margin: 20px 0; opacity: 0.3;">
 
     <h3>Agregar Remedio</h3>
-    <input type="time" id="hora">
-    <input type="text" id="nombre" placeholder="Nombre (Ej: Enalapril)">
+    <label style="font-size: 14px; font-weight: bold;">Toca para elegir la hora:</label>
+    <input type="time" id="hora" required>
+    
+    <input type="text" id="nombre" placeholder="Nombre del remedio">
     
     <div style="display: flex; gap: 10px;">
-        <select id="icono"><option value="💊">💊 Pastilla</option><option value="💧">💧 Gotas</option></select>
-        <select id="color"><option value="#f87171">Rojo</option><option value="#60a5fa">Azul</option><option value="#34d399">Verde</option></select>
+        <select id="icono" style="flex: 1;"><option value="💊">💊 Pastilla</option><option value="💧">💧 Gotas</option><option value="💉">💉 Inyectable</option></select>
+        <select id="color" style="flex: 1;">
+            <option value="#f87171">Rojo</option>
+            <option value="#60a5fa">Azul</option>
+            <option value="#34d399">Verde</option>
+            <option value="#fbbf24">Amarillo</option>
+            <option value="#a78bfa">Morado</option>
+            <option value="#fb923c">Naranja</option>
+        </select>
     </div>
 
-    <button onclick="guardarAlarma()">💾 GUARDAR</button>
+    <button onclick="guardarAlarma()">💾 GUARDAR ALARMA</button>
     <div id="lista-alarmas"></div>
 </div>
 
 <div id="pantalla-alarma" class="alarma-activa">
     <div id="icono-grande" style="font-size: 120px;">💊</div>
     <h1 id="texto-remedio" style="font-size: 40px;">NOMBRE</h1>
-    <p>¡Es hora de su medicamento!</p>
+    <p>¡Es hora de tomar su medicamento!</p>
     <button onclick="detenerAlarma()" style="background: var(--btn-success); width: 80%; padding: 30px; font-size: 25px; border-radius: 20px;">✔️ YA LO TOMÉ</button>
 </div>
 
 <script>
     let alarmas = JSON.parse(localStorage.getItem('remedios')) || [];
-    let audioCtx = null;
-    let loopSonido = null;
-    let wakeLock = null;
+    let audioCtx = null, loopSonido = null, wakeLock = null;
+
+    // Control de Temas
+    function setTema(m) {
+        document.body.classList.toggle('dark-mode', m === 'dark');
+        localStorage.setItem('tema-app', m);
+    }
+    if(localStorage.getItem('tema-app') === 'dark') setTema('dark');
 
     function toggleManual() {
         const m = document.getElementById('manual');
@@ -83,20 +117,12 @@
     }
 
     async function inicializarApp() {
-        // Pedir permiso de notificaciones
-        if ("Notification" in window) {
-            await Notification.requestPermission();
-        }
-
-        // Inicializar Audio
+        if ("Notification" in window) await Notification.requestPermission();
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') await audioCtx.resume();
-        
-        // Mantener procesador despierto
         if ('wakeLock' in navigator) {
             try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
         }
-
         const btn = document.getElementById('btn-audio');
         btn.classList.remove('btn-audio-alerta');
         btn.style.background = "var(--btn-success)";
@@ -105,10 +131,11 @@
 
     function guardarAlarma() {
         const h = document.getElementById('hora').value, n = document.getElementById('nombre').value;
-        if(!h || !n) return alert("Faltan datos");
+        if(!h || !n) return alert("Ingresa hora y nombre");
         alarmas.push({ id: Date.now(), hora: h, nombre: n, icono: document.getElementById('icono').value, color: document.getElementById('color').value, encendida: true });
         localStorage.setItem('remedios', JSON.stringify(alarmas));
         render();
+        document.getElementById('nombre').value = "";
     }
 
     function render() {
@@ -118,7 +145,7 @@
             div.innerHTML += `
                 <div class="alarma-item" style="border-left: 10px solid ${a.color}">
                     <span><strong>${a.hora}</strong> - ${a.nombre}</span>
-                    <button onclick="borrar(${a.id})" style="width: auto; background: #ef4444; padding: 10px;">🗑️</button>
+                    <button onclick="borrar(${a.id})" style="width: auto; background: #ef4444; padding: 10px; border-radius: 10px;">🗑️</button>
                 </div>`;
         });
     }
@@ -133,13 +160,12 @@
         const ahora = new Date();
         const hChile = ahora.toLocaleTimeString('es-CL', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/Santiago' });
         document.getElementById('reloj-vivo').innerText = hChile;
-        
-        const hhmm = hChile.substring(0, 5);
-        alarmas.forEach(a => {
-            if(a.encendida && a.hora === hhmm && ahora.getSeconds() === 0) {
-                lanzarAlarma(a);
-            }
-        });
+        if (hChile.substring(6,8) === "00") {
+            const hhmm = hChile.substring(0, 5);
+            alarmas.forEach(a => {
+                if(a.encendida && a.hora === hhmm) lanzarAlarma(a);
+            });
+        }
     }, 1000);
 
     function lanzarAlarma(a) {
@@ -148,9 +174,8 @@
         document.getElementById('icono-grande').innerText = a.icono;
         document.getElementById('texto-remedio').innerText = a.nombre;
         
-        // Lanzar notificación visual de sistema
         if (Notification.permission === "granted") {
-            new Notification("¡HORA DE TU REMEDIO!", { body: `Debes tomar: ${a.nombre}`, icon: "https://cdn-icons-png.flaticon.com/512/822/822143.png" });
+            new Notification("¡REMEDIO!", { body: `Toca para tomar: ${a.nombre}`, icon: "https://cdn-icons-png.flaticon.com/512/822/822143.png" });
         }
 
         if ("vibrate" in navigator) navigator.vibrate([1000, 500, 1000, 500, 1000]);
