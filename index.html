@@ -2,160 +2,78 @@
 <html lang="es-CL">
 <head>
     <meta charset="UTF-8">
-    <!-- Meta tag clave para Android/Móviles: Evita el zoom accidental y adapta la pantalla -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Alarma Remedios Chile - Modo Accesible</title>
+    <title>Mis Remedios - Chile</title>
     <style>
-        /* Variables de tema y alto contraste */
         :root { 
-            --bg-body: #f0f4f8; 
-            --bg-card: white; 
-            --text-main: #1e293b; 
-            --border: #cbd5e1; 
-            --btn-primary: #4f46e5;
-            --btn-danger: #ef4444;
-            --btn-success: #10b981;
+            --bg-body: #f0f4f8; --bg-card: white; --text-main: #1e293b; --border: #cbd5e1; 
+            --btn-primary: #4f46e5; --btn-danger: #ef4444; --btn-success: #10b981;
         }
         .dark-mode { 
-            --bg-body: #121212; 
-            --bg-card: #1e1e1e; 
-            --text-main: #f8fafc; 
-            --border: #334155; 
-            --btn-primary: #6366f1;
+            --bg-body: #121212; --bg-card: #1e1e1e; --text-main: #f8fafc; --border: #334155; 
         }
 
-        /* Tipografía más grande para Adultos Mayores */
         body { 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            background: var(--bg-body); 
-            color: var(--text-main); 
-            padding: 15px; 
-            margin: 0; 
-            font-size: 18px; /* Tamaño base aumentado */
-            transition: background-color 0.3s; 
+            font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-body); 
+            color: var(--text-main); padding: 15px; margin: 0; font-size: 18px; transition: 0.3s; 
         }
         
         .card { 
-            background: var(--bg-card); 
-            padding: 20px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
-            max-width: 500px; 
-            margin: auto; 
-            border: 2px solid var(--border); 
+            background: var(--bg-card); padding: 20px; border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-width: 500px; margin: auto; border: 2px solid var(--border); 
         }
         
-        h2, h3 { margin-top: 0; }
-        
         .reloj-digital { 
-            font-size: 2.8rem; /* Reloj gigante */
-            font-weight: 900; 
-            margin: 10px 0 20px 0; 
-            background: var(--border); 
-            padding: 20px; 
-            border-radius: 15px; 
-            text-align: center; 
-            letter-spacing: 2px;
+            font-size: 2.8rem; font-weight: 900; margin: 10px 0 20px 0; background: var(--border); 
+            padding: 20px; border-radius: 15px; text-align: center; 
         }
         
         .config-box { 
-            background: #fff7ed; 
-            border: 2px solid #fed7aa; 
-            padding: 15px; 
-            border-radius: 12px; 
-            margin-bottom: 20px; 
-            font-size: 15px; 
-            color: #9a3412; 
-            text-align: center;
+            background: #fff7ed; border: 2px solid #fed7aa; padding: 15px; border-radius: 12px; 
+            margin-bottom: 20px; font-size: 15px; color: #9a3412; text-align: center;
         }
         .dark-mode .config-box { background: #2d1a0a; border-color: #452a10; color: #fbbf24; }
 
-        /* Inputs y Botones extra grandes para facilitar el toque (Touch Targets) */
         input, select, button { 
-            width: 100%; 
-            padding: 16px; 
-            margin: 8px 0 15px 0; 
-            border-radius: 12px; 
-            border: 2px solid var(--border); 
-            font-size: 18px; 
-            box-sizing: border-box; 
-            background: var(--bg-card); 
-            color: var(--text-main); 
-            font-weight: bold;
+            width: 100%; padding: 16px; margin: 8px 0 15px 0; border-radius: 12px; 
+            border: 2px solid var(--border); font-size: 18px; box-sizing: border-box; 
+            background: var(--bg-card); color: var(--text-main); font-weight: bold;
         }
         
-        button { 
-            background: var(--btn-primary); 
-            color: white; 
-            border: none; 
-            cursor: pointer; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.1s;
-        }
-        button:active { transform: scale(0.97); }
+        button { background: var(--btn-primary); color: white; border: none; cursor: pointer; }
         
-        .btn-orange { background: #f97316; margin-bottom: 10px; }
-        
-        /* Animación para llamar la atención al audio */
+        .btn-audio-alerta { animation: parpadeo 1.5s infinite; }
         @keyframes parpadeo {
-            0% { background-color: #ef4444; transform: scale(1); }
-            50% { background-color: #dc2626; transform: scale(1.02); }
-            100% { background-color: #ef4444; transform: scale(1); }
+            0% { background-color: #ef4444; }
+            50% { background-color: #dc2626; }
+            100% { background-color: #ef4444; }
         }
-        .btn-audio-alerta { animation: parpadeo 1.5s infinite; color: white; }
 
-        /* Selector de fondo */
         .tema-selector { display: flex; gap: 10px; margin-bottom: 20px; }
         .tema-btn { flex: 1; padding: 12px; font-size: 14px; cursor: pointer; border-radius: 10px; border: 2px solid var(--border); text-align: center; font-weight: bold; }
 
-        /* Selector de días mejorado */
-        .dias-header { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .btn-pequeno { width: auto; padding: 8px 15px; font-size: 14px; margin: 0; background: var(--border); color: var(--text-main); border-radius: 8px; box-shadow: none;}
         .dias-selector { display: flex; justify-content: space-between; margin: 15px 0 25px 0; }
-        .dia-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: bold; cursor: pointer; background: var(--bg-card); }
+        .dia-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
         .dia-btn.active { background: var(--btn-primary); color: white; border-color: var(--btn-primary); }
 
-        /* Lista de alarmas */
-        .lista-alarmas { margin-top: 30px; }
-        .alarma-item { background: var(--bg-card); padding: 18px; border-radius: 15px; border: 2px solid var(--border); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .alarma-info { flex: 1; }
-        .alarma-info.desactivada { opacity: 0.5; text-decoration: line-through; }
+        .alarma-item { background: var(--bg-card); padding: 18px; border-radius: 15px; border: 2px solid var(--border); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
         
-        .dosis-badge { background: #e0e7ff; color: #4338ca; padding: 4px 8px; border-radius: 6px; font-size: 14px; margin-top: 5px; display: inline-block;}
-        .dark-mode .dosis-badge { background: #3730a3; color: #e0e7ff; }
-
-        /* Switch más grande */
-        .switch { position: relative; display: inline-block; width: 60px; height: 34px; margin-left: 10px; }
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
         .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--btn-success); }
         input:checked + .slider:before { transform: translateX(26px); }
 
-        .btn-borrar { color: var(--btn-danger); font-size: 15px; border: none; background: none; text-decoration: underline; cursor: pointer; width: auto; padding: 10px 0 0 0; box-shadow: none; font-weight: bold; }
-
-        /* Pantalla de alerta GIGANTE */
-        .alarma-activa { position: fixed; top:0; left:0; width:100%; height:100%; z-index:9999; display:none; flex-direction:column; justify-content:center; align-items:center; }
-        #contenedor-mensaje { background: white; padding: 30px; border-radius: 30px; width: 90%; max-width: 450px; text-align: center; color: #1e293b; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        #icono-grande { font-size: 120px; margin-bottom: 10px; line-height: 1; }
-        #texto-remedio { font-size: 35px; font-weight: 900; margin: 10px 0 30px 0; line-height: 1.2; text-transform: uppercase;}
+        .alarma-activa { position: fixed; top:0; left:0; width:100%; height:100%; z-index:9999; display:none; flex-direction:column; justify-content:center; align-items:center; background: rgba(0,0,0,0.9); }
+        #contenedor-mensaje { background: white; padding: 30px; border-radius: 30px; width: 90%; max-width: 450px; text-align: center; color: #1e293b; }
         
-        .btn-posponer { background: #f59e0b; color: white; margin-bottom: 15px; font-size: 20px; padding: 20px; }
-        .btn-detener { background: var(--btn-success); color: white; font-size: 22px; padding: 25px; border-radius: 20px;}
-
-        /* Notificación Toast (Feedback visual) */
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--btn-success); color: white; padding: 15px 30px; border-radius: 30px; z-index: 1000; font-weight: bold; font-size: 18px; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-
         .link-farmacia { display: block; text-align: center; margin-top: 30px; color: var(--btn-primary); font-weight: bold; text-decoration: none; padding: 15px; border: 2px dashed var(--border); border-radius: 10px; }
-        .dark-mode .link-farmacia { color: #818cf8; }
     </style>
 </head>
 <body>
 
-<div id="toast">✅ ¡Alarma Guardada!</div>
-
 <div class="card">
-    <!-- Selector de Tema -->
     <div class="tema-selector">
         <div class="tema-btn" style="background: white; color: black;" onclick="setTema('light')">☀️ DÍA</div>
         <div class="tema-btn" style="background: #121212; color: white;" onclick="setTema('dark')">🌙 NOCHE</div>
@@ -164,29 +82,15 @@
     <div class="reloj-digital" id="reloj-vivo">00:00:00</div>
     
     <div class="config-box">
-        <b style="display:block; margin-bottom:10px; font-size:16px;">⚠️ Para que suene la alarma:</b>
-        <button id="btn-audio" class="btn-audio-alerta" onclick="activarAudio()">🔊 1. DESBLOQUEAR SONIDO AQUÍ</button>
-        <button class="btn-orange" onclick="window.location.href = 'package-settings:'">⚙️ 2. QUITAR LÍMITE DE BATERÍA</button>
+        <button id="btn-audio" class="btn-audio-alerta" onclick="activarAudio()">🔊 ACTIVAR SONIDO</button>
+        <button style="background: #f97316; margin-top: 10px;" onclick="window.location.href = 'package-settings:'">⚙️ QUITAR LÍMITE BATERÍA</button>
     </div>
 
-    <hr style="border: 1px solid var(--border); margin: 25px 0;">
-
-    <h3 style="margin-bottom: 15px;">Añadir Nuevo Remedio</h3>
-    
-    <label style="font-weight: bold; font-size: 16px;">Hora de la toma:</label>
+    <h3>Nuevo Remedio</h3>
     <input type="time" id="hora">
-    
-    <label style="font-weight: bold; font-size: 16px;">Nombre del medicamento:</label>
     <input type="text" id="nombre" placeholder="Ej: Paracetamol 500mg">
+    <input type="number" id="cantidad" placeholder="Cantidad en caja (opcional)">
 
-    <label style="font-weight: bold; font-size: 16px;">Cantidad de pastillas en la caja (Opcional):</label>
-    <input type="number" id="cantidad" placeholder="Ej: 30" min="0">
-
-    <div class="dias-header">
-        <label style="font-weight: bold; font-size: 16px;">Días a tomar:</label>
-        <button class="btn-pequeno" onclick="seleccionarTodosLosDias()">Seleccionar Todos</button>
-    </div>
-    
     <div class="dias-selector">
         <div class="dia-btn" onclick="toggleDia(this, 1)">Lu</div>
         <div class="dia-btn" onclick="toggleDia(this, 2)">Ma</div>
@@ -198,181 +102,77 @@
     </div>
 
     <div style="display: flex; gap: 10px;">
-        <select id="icono" style="flex: 1;">
-            <option value="💊">💊 Pastilla</option>
-            <option value="💧">💧 Gotas</option>
-            <option value="💉">💉 Inyección</option>
-            <option value="👁️">👁️ Ojos</option>
-            <option value="🩹">🩹 Parche/Crema</option>
-        </select>
-        
-        <select id="color" style="flex: 1;">
-            <option value="#f87171">Rojo</option>
-            <option value="#60a5fa">Azul</option>
-            <option value="#34d399">Verde</option>
-            <option value="#fbbf24">Amarillo</option>
-        </select>
+        <select id="icono"><option value="💊">💊 Pastilla</option><option value="💧">💧 Gotas</option></select>
+        <select id="color"><option value="#f87171">Rojo</option><option value="#60a5fa">Azul</option></select>
     </div>
 
-    <button onclick="guardarAlarma()" style="font-size: 20px; padding: 20px; margin-top: 10px;">💾 GUARDAR ALARMA</button>
+    <button onclick="guardarAlarma()" style="font-size: 20px; padding: 20px;">💾 GUARDAR ALARMA</button>
 
     <div class="lista-alarmas" id="lista-alarmas"></div>
 
-    <a href="https://farmanet.minsal.cl/maps/" target="_blank" class="link-farmacia">
-        🏥 Buscar Farmacias de Turno (MINSAL) 🇨🇱
-    </a>
+    <a href="https://farmanet.minsal.cl/maps/" target="_blank" class="link-farmacia">🏥 Farmacias de Turno Chile 🇨🇱</a>
 </div>
 
-<!-- PANTALLA DE ALARMA -->
 <div id="pantalla-alarma" class="alarma-activa">
     <div id="contenedor-mensaje">
-        <div id="icono-grande"></div>
-        <h2>¡ES HORA DE TU REMEDIO!</h2>
+        <div id="icono-grande" style="font-size: 100px;"></div>
         <h1 id="texto-remedio"></h1>
-        
-        <button class="btn-posponer" onclick="posponerAlarma()">⏳ POSPONER 10 MINUTOS</button>
-        <button class="btn-detener" onclick="detenerAlarma()">✔️ YA ME LO TOMÉ</button>
+        <button onclick="posponerAlarma()" style="background: #f59e0b; margin-bottom: 10px;">⏳ POSPONER 10 MIN</button>
+        <button onclick="detenerAlarma()" style="background: var(--btn-success); padding: 20px;">✔️ YA LO TOMÉ</button>
     </div>
 </div>
 
 <script>
     let alarmas = JSON.parse(localStorage.getItem('remedios')) || [];
-    let audioCtx = null;
-    let loopSonido = null;
-    let diasSeleccionados = [];
-    let idAlarmaSonando = null;
+    let audioCtx = null, loopSonido = null, diasSeleccionados = [], idAlarmaSonando = null;
     const nombresDias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
-    // Gestión de Tema
-    function setTema(modo) {
-        if(modo === 'dark') document.body.classList.add('dark-mode');
-        else document.body.classList.remove('dark-mode');
-        localStorage.setItem('tema-preferido', modo);
+    function setTema(m) {
+        document.body.classList.toggle('dark-mode', m === 'dark');
+        localStorage.setItem('tema-preferido', m);
     }
     if(localStorage.getItem('tema-preferido') === 'dark') setTema('dark');
 
-    // Desbloquear Audio
     function activarAudio() {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        Notification.requestPermission();
-        
         const btn = document.getElementById('btn-audio');
         btn.classList.remove('btn-audio-alerta');
         btn.style.background = "var(--btn-success)";
-        btn.innerHTML = "✅ SONIDO ACTIVADO";
-        btn.disabled = true;
+        btn.innerHTML = "✅ SONIDO LISTO";
     }
 
-    // Selección de días
     function toggleDia(el, dia) {
         el.classList.toggle('active');
-        if(diasSeleccionados.includes(dia)) {
-            diasSeleccionados = diasSeleccionados.filter(d => d !== dia);
-        } else {
-            diasSeleccionados.push(dia);
-        }
-    }
-
-    function seleccionarTodosLosDias() {
-        diasSeleccionados = [0,1,2,3,4,5,6];
-        document.querySelectorAll('.dia-btn').forEach(b => b.classList.add('active'));
-    }
-
-    function mostrarToast(mensaje) {
-        const toast = document.getElementById('toast');
-        toast.innerText = mensaje;
-        toast.style.display = 'block';
-        setTimeout(() => toast.style.display = 'none', 3000);
+        if(diasSeleccionados.includes(dia)) diasSeleccionados = diasSeleccionados.filter(d => d !== dia);
+        else diasSeleccionados.push(dia);
     }
 
     function guardarAlarma() {
-        const h = document.getElementById('hora').value;
-        const n = document.getElementById('nombre').value.trim();
-        let cant = document.getElementById('cantidad').value;
-        
-        if(!h || !n) {
-            alert("⚠️ Por favor, ingrese la hora y el nombre del remedio.");
-            return;
-        }
-
-        // Validación de duplicados
-        const duplicado = alarmas.find(a => a.hora === h && a.nombre.toLowerCase() === n.toLowerCase() && a.encendida);
-        if(duplicado) {
-            alert("⚠️ Ya tienes una alarma activada para este remedio a la misma hora.");
-            return;
-        }
-
+        const h = document.getElementById('hora').value, n = document.getElementById('nombre').value;
+        if(!h || !n) return alert("Faltan datos");
         alarmas.push({
-            id: Date.now(),
-            hora: h,
-            nombre: n,
-            cantidad: cant ? parseInt(cant) : null,
-            icono: document.getElementById('icono').value,
+            id: Date.now(), hora: h, nombre: n, 
+            cantidad: document.getElementById('cantidad').value || null,
+            icono: document.getElementById('icono').value, 
             color: document.getElementById('color').value,
-            dias: [...diasSeleccionados].sort(),
-            encendida: true
+            dias: [...diasSeleccionados], encendida: true
         });
-        
         salvarYRenderizar();
-        
-        // Limpiar formulario
-        document.getElementById('nombre').value = "";
-        document.getElementById('cantidad').value = "";
-        diasSeleccionados = [];
-        document.querySelectorAll('.dia-btn').forEach(b => b.classList.remove('active'));
-        
-        mostrarToast("✅ ¡Alarma Guardada!");
-    }
-
-    function toggleEncendido(id) {
-        const idx = alarmas.findIndex(a => a.id === id);
-        alarmas[idx].encendida = !alarmas[idx].encendida;
-        salvarYRenderizar();
-    }
-
-    function borrarAlarma(id) {
-        if(confirm("¿Estás seguro de borrar este remedio?")) {
-            alarmas = alarmas.filter(a => a.id !== id);
-            salvarYRenderizar();
-        }
     }
 
     function salvarYRenderizar() {
-        // Limpiar alarmas "pospuestas" temporales que ya pasaron o se apagaron para no saturar memoria
-        alarmas = alarmas.filter(a => !(a.esTemporal && !a.encendida));
         localStorage.setItem('remedios', JSON.stringify(alarmas));
         renderAlarmas();
     }
 
     function renderAlarmas() {
         const div = document.getElementById('lista-alarmas');
-        div.innerHTML = "<h3 style='border-bottom: 2px solid var(--border); padding-bottom:10px;'>Mis Remedios Registrados:</h3>";
-        
-        if(alarmas.length === 0) {
-            div.innerHTML += "<p style='text-align:center; opacity:0.6;'>Aún no hay remedios guardados.</p>";
-            return;
-        }
-
+        div.innerHTML = "<h3>Mis Remedios:</h3>";
         alarmas.forEach(a => {
-            if(a.esTemporal) return; // No mostrar las alarmas pospuestas en la lista principal
-
-            const textoDias = a.dias.length === 0 ? "🔔 Suena una vez" : 
-                             (a.dias.length === 7 ? "🔄 Todos los días" : "📅 " + a.dias.map(d => nombresDias[d].substring(0,3)).join(", "));
-            
-            const badgeDosis = (a.cantidad !== null && a.cantidad !== undefined) ? 
-                               `<div class="dosis-badge">Quedan: ${a.cantidad} dosis</div>` : '';
-
+            if(a.esTemporal) return;
             div.innerHTML += `
                 <div class="alarma-item" style="border-left: 8px solid ${a.color}">
-                    <div class="alarma-info ${a.encendida ? '' : 'desactivada'}">
-                        <strong style="font-size:22px;">${a.hora}</strong><br>
-                        <span style="font-size:18px; font-weight:bold;">${a.icono} ${a.nombre}</span><br>
-                        <small style="opacity: 0.8; font-weight:bold;">${textoDias}</small><br>
-                        ${badgeDosis}
-                        <div>
-                            <button class="btn-borrar" onclick="borrarAlarma(${a.id})">🗑️ Borrar</button>
-                        </div>
-                    </div>
+                    <div><strong>${a.hora}</strong> - ${a.nombre}</div>
                     <label class="switch">
                         <input type="checkbox" ${a.encendida ? 'checked' : ''} onchange="toggleEncendido(${a.id})">
                         <span class="slider"></span>
@@ -381,18 +181,20 @@
         });
     }
 
-    // Reloj Chile 24h y Motor de Alarmas
+    function toggleEncendido(id) {
+        const idx = alarmas.findIndex(a => a.id === id);
+        alarmas[idx].encendida = !alarmas[idx].encendida;
+        salvarYRenderizar();
+    }
+
     setInterval(() => {
         const ahora = new Date();
-        const horaChile = ahora.toLocaleTimeString('es-CL', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/Santiago' });
-        document.getElementById('reloj-vivo').innerText = horaChile;
-
-        const hhmm = horaChile.substring(0, 5);
-        const diaActual = ahora.getDay();
-
+        const hChile = ahora.toLocaleTimeString('es-CL', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/Santiago' });
+        document.getElementById('reloj-vivo').innerText = hChile;
+        const hhmm = hChile.substring(0, 5);
         alarmas.forEach(a => {
             if(a.encendida && a.hora === hhmm && ahora.getSeconds() === 0) {
-                if(a.dias.length === 0 || a.dias.includes(diaActual) || a.esTemporal) {
+                if(a.dias.length === 0 || a.dias.includes(ahora.getDay()) || a.esTemporal) {
                     idAlarmaSonando = a.id;
                     lanzarAlarma(a);
                 }
@@ -401,88 +203,37 @@
     }, 1000);
 
     function lanzarAlarma(a) {
-        if (Notification.permission === "granted") {
-            new Notification("¡REMEDIO!", { body: `Es hora de tomar: ${a.nombre} ${a.icono}`, requireInteraction: true });
-        }
-        
         const p = document.getElementById('pantalla-alarma');
         p.style.display = 'flex';
-        p.style.backgroundColor = "rgba(0,0,0,0.8)"; // Fondo oscuro para resaltar la tarjeta
         document.getElementById('icono-grande').innerText = a.icono;
         document.getElementById('texto-remedio').innerText = a.nombre;
-        
-        // Sonido Fuerte estilo Beep Médico
         if(audioCtx) {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
             loopSonido = setInterval(() => {
                 const o = audioCtx.createOscillator();
                 const g = audioCtx.createGain();
-                o.type = 'square'; // Sonido más penetrante
-                o.connect(g); 
-                g.connect(audioCtx.destination);
-                o.frequency.setValueAtTime(800, audioCtx.currentTime);
-                o.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.3);
-                g.gain.setValueAtTime(1, audioCtx.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                o.start(); 
-                o.stop(audioCtx.currentTime + 0.5);
-            }, 800);
+                o.connect(g); g.connect(audioCtx.destination);
+                o.start(); o.stop(audioCtx.currentTime + 0.3);
+            }, 1000);
         }
     }
 
     function detenerAlarma() {
         document.getElementById('pantalla-alarma').style.display = 'none';
         clearInterval(loopSonido);
-
-        const idx = alarmas.findIndex(a => a.id === idAlarmaSonando);
-        if (idx !== -1) {
-            // Reducir inventario
-            if (alarmas[idx].cantidad !== null && alarmas[idx].cantidad > 0) {
-                alarmas[idx].cantidad--;
-                if(alarmas[idx].cantidad <= 5 && alarmas[idx].cantidad > 0) {
-                    setTimeout(() => alert(`⚠️ ATENCIÓN: Solo quedan ${alarmas[idx].cantidad} dosis de ${alarmas[idx].nombre}. ¡Recuerde comprar más!`), 500);
-                } else if (alarmas[idx].cantidad === 0) {
-                    setTimeout(() => alert(`❌ SE ACABÓ: No quedan más dosis registradas de ${alarmas[idx].nombre}.`), 500);
-                }
-            }
-
-            // Apagar si era de una sola vez o temporal
-            if (alarmas[idx].dias.length === 0 || alarmas[idx].esTemporal) {
-                alarmas[idx].encendida = false;
-            }
-            salvarYRenderizar();
-        }
         idAlarmaSonando = null;
     }
 
     function posponerAlarma() {
-        document.getElementById('pantalla-alarma').style.display = 'none';
-        clearInterval(loopSonido);
-
-        const idx = alarmas.findIndex(a => a.id === idAlarmaSonando);
-        if (idx !== -1) {
-            let now = new Date();
-            now.setMinutes(now.getMinutes() + 10); // Sumar 10 minutos
-            
-            let h = String(now.getHours()).padStart(2, '0');
-            let m = String(now.getMinutes()).padStart(2, '0');
-            
-            // Crear una alarma temporal
-            let alarmaPospuesta = { ...alarmas[idx] };
-            alarmaPospuesta.id = Date.now();
-            alarmaPospuesta.hora = h + ":" + m;
-            alarmaPospuesta.dias = []; // Solo sonará una vez
-            alarmaPospuesta.esTemporal = true; 
-            
-            alarmas.push(alarmaPospuesta);
-            salvarYRenderizar();
-            
-            mostrarToast(`⏳ Pospuesto. Sonará nuevamente a las ${alarmaPospuesta.hora}`);
-        }
-        idAlarmaSonando = null;
+        detenerAlarma();
+        alert("Pospuesto 10 min (Simulado)");
     }
 
     renderAlarmas();
+
+    // REGISTRO DEL SERVICE WORKER (Para modo offline)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('pwabuilder-sw.js');
+    }
 </script>
 </body>
 </html>
