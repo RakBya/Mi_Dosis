@@ -176,7 +176,7 @@
 
     function renderAlarmas() {
         const div = document.getElementById('lista-alarmas');
-        div.innerHTML = "<h3>Mis Remedios:</h3>";
+        div.innerHTML = "";
         alarmas.forEach(a => {
             div.innerHTML += `
                 <div class="alarma-item" style="border-left: 10px solid ${a.color}">
