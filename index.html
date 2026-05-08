@@ -67,9 +67,6 @@
 
         .alarma-activa { position: fixed; top:0; left:0; width:100%; height:100%; z-index:9999; display:none; flex-direction:column; justify-content:center; align-items:center; background: rgba(0,0,0,0.9); }
         #contenedor-mensaje { background: white; padding: 30px; border-radius: 30px; width: 90%; max-width: 450px; text-align: center; color: #1e293b; }
-        
-        .link-farmacia { display: block; text-align: center; margin-top: 30px; color: var(--btn-primary); font-weight: bold; text-decoration: none; padding: 18px; border: 3px solid var(--btn-primary); border-radius: 15px; background: white; font-size: 20px;}
-        .dark-mode .link-farmacia { background: #1e1e1e; border-color: #818cf8; color: #818cf8; }
     </style>
 </head>
 <body>
@@ -106,6 +103,7 @@
             <option value="💊">💊 Pastilla</option>
             <option value="💧">💧 Gotas</option>
             <option value="💉">💉 Inyección</option>
+            <option value="🩹">🩹 Parche/Crema</option>
         </select>
         
         <select id="color" style="flex: 1;">
@@ -121,10 +119,6 @@
     <button onclick="guardarAlarma()" style="font-size: 20px; padding: 20px;">💾 GUARDAR ALARMA</button>
 
     <div class="lista-alarmas" id="lista-alarmas"></div>
-
-    <a href="https://farmanet.minsal.cl/maps/" target="_blank" class="link-farmacia">
-        🏥 BUSCAR FARMACIAS DE TURNO
-    </a>
 </div>
 
 <div id="pantalla-alarma" class="alarma-activa">
@@ -171,6 +165,8 @@
         });
         salvarYRenderizar();
         document.getElementById('nombre').value = "";
+        diasSeleccionados = [];
+        document.querySelectorAll('.dia-btn').forEach(b => b.classList.remove('active'));
     }
 
     function salvarYRenderizar() {
