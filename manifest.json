@@ -1,6 +1,8 @@
 {
-  "name": "Mis Remedios",
-  "short_name": "Remedios",
+  "name": "Mis Remedios: Alarma de Salud",
+  "short_name": "Mis Remedios",
+  "description": "Aplicación sencilla para gestionar alarmas de medicamentos y salud.",
+  "id": "com.misremedios.app",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#f0f4f8",
