@@ -68,7 +68,8 @@
         .alarma-activa { position: fixed; top:0; left:0; width:100%; height:100%; z-index:9999; display:none; flex-direction:column; justify-content:center; align-items:center; background: rgba(0,0,0,0.9); }
         #contenedor-mensaje { background: white; padding: 30px; border-radius: 30px; width: 90%; max-width: 450px; text-align: center; color: #1e293b; }
         
-        .link-farmacia { display: block; text-align: center; margin-top: 30px; color: var(--btn-primary); font-weight: bold; text-decoration: none; padding: 15px; border: 2px dashed var(--border); border-radius: 10px; }
+        .link-farmacia { display: block; text-align: center; margin-top: 30px; color: var(--btn-primary); font-weight: bold; text-decoration: none; padding: 18px; border: 3px solid var(--btn-primary); border-radius: 15px; background: white; font-size: 20px;}
+        .dark-mode .link-farmacia { background: #1e1e1e; border-color: #818cf8; color: #818cf8; }
     </style>
 </head>
 <body>
@@ -83,12 +84,11 @@
     
     <div class="config-box">
         <button id="btn-audio" class="btn-audio-alerta" onclick="activarAudio()">🔊 ACTIVAR SONIDO</button>
-        <button style="background: #f97316; margin-top: 10px;" onclick="window.location.href = 'package-settings:'">⚙️ QUITAR LÍMITE BATERÍA</button>
     </div>
 
     <h3>Nuevo Remedio</h3>
     <input type="time" id="hora">
-    <input type="text" id="nombre" placeholder="Ej: Paracetamol 500mg">
+    <input type="text" id="nombre" placeholder="Nombre (ej: Paracetamol)">
     <input type="number" id="cantidad" placeholder="Cantidad en caja (opcional)">
 
     <div class="dias-selector">
@@ -102,30 +102,42 @@
     </div>
 
     <div style="display: flex; gap: 10px;">
-        <select id="icono"><option value="💊">💊 Pastilla</option><option value="💧">💧 Gotas</option></select>
-        <select id="color"><option value="#f87171">Rojo</option><option value="#60a5fa">Azul</option></select>
+        <select id="icono" style="flex: 1;">
+            <option value="💊">💊 Pastilla</option>
+            <option value="💧">💧 Gotas</option>
+            <option value="💉">💉 Inyección</option>
+        </select>
+        
+        <select id="color" style="flex: 1;">
+            <option value="#f87171">Rojo</option>
+            <option value="#60a5fa">Azul</option>
+            <option value="#34d399">Verde</option>
+            <option value="#fbbf24">Amarillo</option>
+            <option value="#a78bfa">Morado</option>
+            <option value="#fb923c">Naranja</option>
+        </select>
     </div>
 
     <button onclick="guardarAlarma()" style="font-size: 20px; padding: 20px;">💾 GUARDAR ALARMA</button>
 
     <div class="lista-alarmas" id="lista-alarmas"></div>
 
-    <a href="https://farmanet.minsal.cl/maps/" target="_blank" class="link-farmacia">🏥 Farmacias de Turno Chile 🇨🇱</a>
+    <a href="https://farmanet.minsal.cl/maps/" target="_blank" class="link-farmacia">
+        🏥 BUSCAR FARMACIAS DE TURNO
+    </a>
 </div>
 
 <div id="pantalla-alarma" class="alarma-activa">
     <div id="contenedor-mensaje">
         <div id="icono-grande" style="font-size: 100px;"></div>
         <h1 id="texto-remedio"></h1>
-        <button onclick="posponerAlarma()" style="background: #f59e0b; margin-bottom: 10px;">⏳ POSPONER 10 MIN</button>
-        <button onclick="detenerAlarma()" style="background: var(--btn-success); padding: 20px;">✔️ YA LO TOMÉ</button>
+        <button onclick="detenerAlarma()" style="background: var(--btn-success); padding: 25px; font-size: 22px; border-radius: 20px;">✔️ YA LO TOMÉ</button>
     </div>
 </div>
 
 <script>
     let alarmas = JSON.parse(localStorage.getItem('remedios')) || [];
     let audioCtx = null, loopSonido = null, diasSeleccionados = [], idAlarmaSonando = null;
-    const nombresDias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
     function setTema(m) {
         document.body.classList.toggle('dark-mode', m === 'dark');
@@ -149,7 +161,7 @@
 
     function guardarAlarma() {
         const h = document.getElementById('hora').value, n = document.getElementById('nombre').value;
-        if(!h || !n) return alert("Faltan datos");
+        if(!h || !n) return alert("Por favor escribe la hora y el nombre");
         alarmas.push({
             id: Date.now(), hora: h, nombre: n, 
             cantidad: document.getElementById('cantidad').value || null,
@@ -158,6 +170,7 @@
             dias: [...diasSeleccionados], encendida: true
         });
         salvarYRenderizar();
+        document.getElementById('nombre').value = "";
     }
 
     function salvarYRenderizar() {
@@ -169,10 +182,9 @@
         const div = document.getElementById('lista-alarmas');
         div.innerHTML = "<h3>Mis Remedios:</h3>";
         alarmas.forEach(a => {
-            if(a.esTemporal) return;
             div.innerHTML += `
-                <div class="alarma-item" style="border-left: 8px solid ${a.color}">
-                    <div><strong>${a.hora}</strong> - ${a.nombre}</div>
+                <div class="alarma-item" style="border-left: 10px solid ${a.color}">
+                    <div><strong>${a.hora}</strong><br>${a.icono} ${a.nombre}</div>
                     <label class="switch">
                         <input type="checkbox" ${a.encendida ? 'checked' : ''} onchange="toggleEncendido(${a.id})">
                         <span class="slider"></span>
@@ -194,8 +206,7 @@
         const hhmm = hChile.substring(0, 5);
         alarmas.forEach(a => {
             if(a.encendida && a.hora === hhmm && ahora.getSeconds() === 0) {
-                if(a.dias.length === 0 || a.dias.includes(ahora.getDay()) || a.esTemporal) {
-                    idAlarmaSonando = a.id;
+                if(a.dias.length === 0 || a.dias.includes(ahora.getDay())) {
                     lanzarAlarma(a);
                 }
             }
@@ -210,27 +221,19 @@
         if(audioCtx) {
             loopSonido = setInterval(() => {
                 const o = audioCtx.createOscillator();
-                const g = audioCtx.createGain();
-                o.connect(g); g.connect(audioCtx.destination);
-                o.start(); o.stop(audioCtx.currentTime + 0.3);
-            }, 1000);
+                o.connect(audioCtx.destination);
+                o.start(); o.stop(audioCtx.currentTime + 0.2);
+            }, 800);
         }
     }
 
     function detenerAlarma() {
         document.getElementById('pantalla-alarma').style.display = 'none';
         clearInterval(loopSonido);
-        idAlarmaSonando = null;
-    }
-
-    function posponerAlarma() {
-        detenerAlarma();
-        alert("Pospuesto 10 min (Simulado)");
     }
 
     renderAlarmas();
 
-    // REGISTRO DEL SERVICE WORKER (Para modo offline)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('pwabuilder-sw.js');
     }
